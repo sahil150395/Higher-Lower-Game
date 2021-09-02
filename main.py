@@ -3,48 +3,54 @@ import random
 import art
 from replit import clear
 
+def format_data(account):
+    """Format the account data in printable form"""
+    accountName = account["name"]
+    accountDesc = account["description"]
+    accountCountry = account["country"]
 
-comparison = random.choice(data)
-cFollower = comparison["follower_count"]
-against = random.choice(data)
-aFollower = against["follower_count"]
-if comparison == against:
-    against = random.choice(data)
+    return f'{accountName}, a {accountDesc}, from {accountCountry}.'
 
+
+def check_answer(guess, cFollower, aFollower):
+    """Use if statement to check if user is correct and returns is they got it right"""
+    if cFollower > aFollower:
+        return guess == "a"
+    else:
+        return guess == "b"
+    
+print(art.logo)
 score = 0
+continueGame = True
+against = random.choice(data)
 
-play_game = True
-while play_game:
+while continueGame:
+
+    comparison = against
+    against = random.choice(data)
+    while comparison == against:
+        against = random.choice(data)
+
+
+        
+    print(f"Compare A: {format_data(comparison)}")
+    print(art.vs)
+    print(f"Against B: {format_data(against)}")
+    guess = input("Who has more followers? Type 'A' or 'B': ").lower()
+
+    cFollower = comparison["follower_count"]
+    aFollower = against["follower_count"]
+
+    is_correct = check_answer(guess, cFollower, aFollower)
+    
     clear()
     print(art.logo)
-    if score > 0 and play_game:
-        print(f"You're right! Current score: {score}.")
-    print(f'Compare A: {comparison["name"]}, a {comparison["description"]}, from {comparison["country"]}.{comparison["follower_count"]}')
-    print(art.vs)
-    print(f'Against B: {against["name"]}, a {against["description"]}, from {against["country"]}.{against["follower_count"]}')
-    guess = input("Who has more followers? Type 'A' or 'B': ").lower()
-    
 
-    if cFollower > aFollower and guess == "a":
+    if is_correct:
         score += 1
-        comparison = against
-        cFollower = comparison["follower_count"]
-        against = random.choice(data)
-        if comparison == against:
-            against = random.choice(data)
-        aFollower = against["follower_count"]
-    elif cFollower < aFollower and guess == "b":
-        score += 1
-        comparison = against
-        cFollower = comparison["follower_count"]
-        against = random.choice(data)
-        if comparison == against:
-            against = random.choice(data)
-        aFollower = against["follower_count"]
+        print(f"You're right! Current score: {score}.")
     else:
-        clear()
-        print(art.logo)
+        continueGame = False
         print(f"Sorry, that's wrong. Final score: {score}")
-        play_game = False
-    
+
     
